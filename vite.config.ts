@@ -14,10 +14,4 @@ export default defineConfig({
         port: 3000,
         open: true,
     },
-    resolve: {
-        alias: {
-            // Ensure this matches your tsconfig paths
-            "react-modern-gantt": "/src",
-        },
-    },
 });
