@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
-import { GanttChart, Task, TaskGroup, ViewMode } from "react-modern-gantt";
+import GanttChart, { Task, TaskGroup, ViewMode } from "react-modern-gantt";
 import CodeExample from "./CodeExample";
 
 interface GanttCodeExampleProps {

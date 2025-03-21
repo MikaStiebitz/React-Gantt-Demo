@@ -15,10 +15,7 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
         "allowSyntheticDefaultImports": true,
-        "baseUrl": ".",
-        "paths": {
-            "react-modern-gantt": ["./src"]
-        }
+        "baseUrl": "."
     },
     "include": ["src"],
     "references": [{ "path": "./tsconfig.node.json" }]
