@@ -73,7 +73,7 @@ const GanttCodeExample: React.FC<GanttCodeExampleProps> = ({ title, description,
                 group.id === groupId
                     ? {
                           ...group,
-                          tasks: group.tasks.map(task => (task.id === updatedTask.id ? updatedTask : task)),
+                          tasks: group.tasks.map((task: Task) => (task.id === updatedTask.id ? updatedTask : task)),
                       }
                     : group
             )

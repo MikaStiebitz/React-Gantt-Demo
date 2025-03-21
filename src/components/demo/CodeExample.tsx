@@ -16,14 +16,7 @@ interface CodeExampleProps {
     showCopyButton?: boolean;
 }
 
-const CodeExample: React.FC<CodeExampleProps> = ({
-    title,
-    description,
-    code,
-    language,
-    demoComponent,
-    showCopyButton = true,
-}) => {
+const CodeExample: React.FC<CodeExampleProps> = ({ title, description, code, language, demoComponent }) => {
     const { darkMode } = useTheme();
 
     // If no demo component is provided, just show the code example
