@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { GanttChart, Task, TaskGroup, ViewMode } from "react-modern-gantt";
+import GanttChart, { Task, TaskGroup, ViewMode } from "react-modern-gantt";
 import { useTheme } from "../../context/ThemeContext";
 
 const GanttDemo: React.FC = () => {
@@ -108,7 +108,7 @@ const GanttDemo: React.FC = () => {
                 group.id === groupId
                     ? {
                           ...group,
-                          tasks: group.tasks.map(task => (task.id === updatedTask.id ? updatedTask : task)),
+                          tasks: group.tasks.map((task: Task) => (task.id === updatedTask.id ? updatedTask : task)),
                       }
                     : group
             )

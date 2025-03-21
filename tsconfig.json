@@ -2,19 +2,22 @@
     "compilerOptions": {
         "target": "ES2020",
         "useDefineForClassFields": true,
-        "lib": ["ES2020", "DOM", "DOM.Iterable"],
         "module": "ESNext",
         "skipLibCheck": true,
         "isolatedModules": true,
         "noEmit": true,
         "jsx": "react-jsx",
+        "jsxImportSource": "react",
+        "lib": ["dom", "es6"],
         "strict": true,
         "noUnusedLocals": true,
+        "moduleResolution": "Node",
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
+        "allowSyntheticDefaultImports": true,
         "baseUrl": ".",
         "paths": {
-            "react-modern-gantt": ["../src"]
+            "react-modern-gantt": ["./src"]
         }
     },
     "include": ["src"],

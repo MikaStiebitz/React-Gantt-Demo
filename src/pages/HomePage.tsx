@@ -1,10 +1,12 @@
-import React from "react";
+import { createElement } from "react";
+import type { ReactElement } from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import GanttDemo from "../components/demo/GanttDemo";
 import CodeExample from "../components/demo/CodeExample";
 
-const HomePage: React.FC = () => {
+// Update the component type definition to be compatible with React 19
+const HomePage = (): ReactElement => {
     const { darkMode } = useTheme();
 
     // Basic usage example code
@@ -101,84 +103,65 @@ yarn add react-modern-gantt`;
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div className={`p-6 rounded-lg shadow-md ${darkMode ? "bg-gray-800" : "bg-white"}`}>
-                        <h3 className={`text-xl font-bold mb-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-                            Interactive Timeline
-                        </h3>
-                        <p className={darkMode ? "text-gray-300" : "text-gray-600"}>
-                            Drag-and-drop task scheduling with intuitive controls for resizing and rescheduling tasks.
-                        </p>
-                    </div>
-
-                    <div className={`p-6 rounded-lg shadow-md ${darkMode ? "bg-gray-800" : "bg-white"}`}>
-                        <h3 className={`text-xl font-bold mb-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-                            Multiple View Modes
-                        </h3>
-                        <p className={darkMode ? "text-gray-300" : "text-gray-600"}>
-                            Day, Week, Month, Quarter, and Year view modes to fit your project timeline needs.
-                        </p>
-                    </div>
-
-                    <div className={`p-6 rounded-lg shadow-md ${darkMode ? "bg-gray-800" : "bg-white"}`}>
-                        <h3 className={`text-xl font-bold mb-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-                            Customizable Design
-                        </h3>
-                        <p className={darkMode ? "text-gray-300" : "text-gray-600"}>
-                            Built with Tailwind CSS for easy customization with dark mode support and responsive design.
-                        </p>
-                    </div>
-
-                    <div className={`p-6 rounded-lg shadow-md ${darkMode ? "bg-gray-800" : "bg-white"}`}>
-                        <h3 className={`text-xl font-bold mb-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-                            Progress Tracking
-                        </h3>
-                        <p className={darkMode ? "text-gray-300" : "text-gray-600"}>
-                            Visual indicators and interactive updates for task completion percentages.
-                        </p>
-                    </div>
-
-                    <div className={`p-6 rounded-lg shadow-md ${darkMode ? "bg-gray-800" : "bg-white"}`}>
-                        <h3 className={`text-xl font-bold mb-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-                            Task Dependencies
-                        </h3>
-                        <p className={darkMode ? "text-gray-300" : "text-gray-600"}>
-                            Support for tracking and visualizing dependencies between tasks.
-                        </p>
-                    </div>
-
-                    <div className={`p-6 rounded-lg shadow-md ${darkMode ? "bg-gray-800" : "bg-white"}`}>
-                        <h3 className={`text-xl font-bold mb-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
-                            Event Handling
-                        </h3>
-                        <p className={darkMode ? "text-gray-300" : "text-gray-600"}>
-                            Comprehensive event handling for clicks, updates, and selections.
-                        </p>
-                    </div>
+                    {/* Feature cards */}
+                    {[
+                        {
+                            title: "Interactive Timeline",
+                            desc: "Drag-and-drop task scheduling with intuitive controls for resizing and rescheduling tasks.",
+                        },
+                        {
+                            title: "Multiple View Modes",
+                            desc: "Day, Week, Month, Quarter, and Year view modes to fit your project timeline needs.",
+                        },
+                        {
+                            title: "Customizable Design",
+                            desc: "Built with Tailwind CSS for easy customization with dark mode support and responsive design.",
+                        },
+                        {
+                            title: "Progress Tracking",
+                            desc: "Visual indicators and interactive updates for task completion percentages.",
+                        },
+                        {
+                            title: "Task Dependencies",
+                            desc: "Support for tracking and visualizing dependencies between tasks.",
+                        },
+                        {
+                            title: "Event Handling",
+                            desc: "Comprehensive event handling for clicks, updates, and selections.",
+                        },
+                    ].map((feature, index) => (
+                        <div
+                            key={index}
+                            className={`p-6 rounded-lg shadow-md ${darkMode ? "bg-gray-800" : "bg-white"}`}>
+                            <h3 className={`text-xl font-bold mb-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
+                                {feature.title}
+                            </h3>
+                            <p className={darkMode ? "text-gray-300" : "text-gray-600"}>{feature.desc}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
 
             {/* Installation Section */}
             <div className="mb-16" id="installation">
                 <h2 className={`text-3xl font-bold mb-8 ${darkMode ? "text-white" : "text-gray-900"}`}>Installation</h2>
-
-                <CodeExample
-                    title="Install with npm or yarn"
-                    description="Add React Modern Gantt to your project using npm or yarn."
-                    code={installationCode}
-                    language="bash"
-                />
+                {createElement(CodeExample, {
+                    title: "Install with npm or yarn",
+                    description: "Add React Modern Gantt to your project using npm or yarn.",
+                    code: installationCode,
+                    language: "bash",
+                })}
             </div>
 
             {/* Basic Usage Section */}
             <div className="mb-16">
                 <h2 className={`text-3xl font-bold mb-8 ${darkMode ? "text-white" : "text-gray-900"}`}>Basic Usage</h2>
-
-                <CodeExample
-                    title="Simple Implementation"
-                    description="A basic example of using the GanttChart component."
-                    code={basicUsageCode}
-                    language="jsx"
-                />
+                {createElement(CodeExample, {
+                    title: "Simple Implementation",
+                    description: "A basic example of using the GanttChart component.",
+                    code: basicUsageCode,
+                    language: "jsx",
+                })}
             </div>
 
             {/* Demo Section */}
@@ -186,8 +169,7 @@ yarn add react-modern-gantt`;
                 <h2 className={`text-3xl font-bold mb-8 ${darkMode ? "text-white" : "text-gray-900"}`}>
                     Interactive Demo
                 </h2>
-
-                <GanttDemo />
+                {createElement(GanttDemo)}
             </div>
 
             {/* CTA Section */}
