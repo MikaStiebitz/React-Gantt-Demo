@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import GanttChart, { Task, TaskGroup, ViewMode } from "react-modern-gantt";
+import { Task, TaskGroup, ViewMode } from "react-modern-gantt";
 import { useTheme } from "../../context/ThemeContext";
+import GanttChart from "react-modern-gantt";
+import "react-modern-gantt/dist/index.css";
 
 const GanttDemo: React.FC = () => {
     const { darkMode } = useTheme();
@@ -22,7 +24,7 @@ const GanttDemo: React.FC = () => {
                         name: "UI Components",
                         startDate: new Date(currentYear, currentMonth - 1, 5),
                         endDate: new Date(currentYear, currentMonth + 1, 15),
-                        color: "bg-blue-500",
+                        color: "#3B82F6", // blue-500
                         percent: 80,
                     },
                     {
@@ -30,7 +32,7 @@ const GanttDemo: React.FC = () => {
                         name: "Backend API",
                         startDate: new Date(currentYear, currentMonth, 10),
                         endDate: new Date(currentYear, currentMonth + 2, 20),
-                        color: "bg-emerald-500",
+                        color: "#10B981", // emerald-500
                         percent: 60,
                     },
                     {
@@ -38,7 +40,7 @@ const GanttDemo: React.FC = () => {
                         name: "Database Schema",
                         startDate: new Date(currentYear, currentMonth + 1, 15),
                         endDate: new Date(currentYear, currentMonth + 2, 30),
-                        color: "bg-purple-500",
+                        color: "#8B5CF6", // purple-500
                         percent: 35,
                         dependencies: ["task-2"],
                     },
@@ -54,7 +56,7 @@ const GanttDemo: React.FC = () => {
                         name: "Campaign Planning",
                         startDate: new Date(currentYear, currentMonth - 1, 15),
                         endDate: new Date(currentYear, currentMonth, 28),
-                        color: "bg-purple-500",
+                        color: "#8B5CF6", // purple-500
                         percent: 100,
                     },
                     {
@@ -62,7 +64,7 @@ const GanttDemo: React.FC = () => {
                         name: "Content Creation",
                         startDate: new Date(currentYear, currentMonth + 1, 1),
                         endDate: new Date(currentYear, currentMonth + 2, 15),
-                        color: "bg-violet-600",
+                        color: "#7C3AED", // violet-600
                         percent: 50,
                         dependencies: ["task-4"],
                     },
@@ -78,7 +80,7 @@ const GanttDemo: React.FC = () => {
                         name: "Wireframing",
                         startDate: new Date(currentYear, currentMonth - 1, 10),
                         endDate: new Date(currentYear, currentMonth, 20),
-                        color: "bg-amber-500",
+                        color: "#F59E0B", // amber-500
                         percent: 100,
                     },
                     {
@@ -86,7 +88,7 @@ const GanttDemo: React.FC = () => {
                         name: "Visual Design",
                         startDate: new Date(currentYear, currentMonth, 25),
                         endDate: new Date(currentYear, currentMonth + 2, 5),
-                        color: "bg-amber-500",
+                        color: "#F59E0B", // amber-500
                         percent: 70,
                         dependencies: ["task-6"],
                     },

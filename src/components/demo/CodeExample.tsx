@@ -61,14 +61,33 @@ const CodeExample: React.FC<CodeExampleProps> = ({ title, description, code, lan
                 </CardHeader>
                 <CardContent className="p-0">
                     <Tabs defaultValue="demo" className="w-full">
-                        <div className={`px-4 py-2 ${darkMode ? "bg-gray-900" : "bg-gray-50"}`}>
-                            <TabsList className={darkMode ? "bg-gray-800" : "bg-gray-200"}>
-                                <TabsTrigger value="demo">Demo</TabsTrigger>
-                                <TabsTrigger value="code">Code</TabsTrigger>
+                        <div
+                            className={`px-4 py-3 border-b ${
+                                darkMode ? "bg-gray-700 border-gray-600" : "bg-gray-100 border-gray-200"
+                            }`}>
+                            <TabsList className={`grid w-64 grid-cols-2 ${darkMode ? "bg-gray-800" : "bg-white"}`}>
+                                <TabsTrigger
+                                    value="demo"
+                                    className={`text-base font-medium rounded-md px-4 py-2 ${
+                                        darkMode
+                                            ? "data-[state=active]:bg-indigo-600 data-[state=active]:text-white"
+                                            : "data-[state=active]:bg-indigo-100 data-[state=active]:text-indigo-800"
+                                    }`}>
+                                    Demo
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    value="code"
+                                    className={`text-base font-medium rounded-md px-4 py-2 ${
+                                        darkMode
+                                            ? "data-[state=active]:bg-indigo-600 data-[state=active]:text-white"
+                                            : "data-[state=active]:bg-indigo-100 data-[state=active]:text-indigo-800"
+                                    }`}>
+                                    Code
+                                </TabsTrigger>
                             </TabsList>
                         </div>
 
-                        <TabsContent value="demo" className="p-4">
+                        <TabsContent value="demo" className="p-6">
                             {demoComponent}
                         </TabsContent>
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
+import { Search } from "lucide-react";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Command, CommandInput, CommandList, CommandGroup, CommandItem, CommandEmpty } from "../ui/command";
@@ -84,6 +85,16 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
 
+    // Focus input when dialog opens
+    useEffect(() => {
+        if (isOpen) {
+            const input = document.querySelector("[cmdk-input]") as HTMLInputElement;
+            if (input) {
+                setTimeout(() => input.focus(), 100);
+            }
+        }
+    }, [isOpen]);
+
     // Handle escape key press to close modal
     useEffect(() => {
         const handleEsc = (event: KeyboardEvent) => {
@@ -116,7 +127,9 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className={`sm:max-w-2xl ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white"}`}>
+            <DialogContent
+                className={`sm:max-w-2xl ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}
+                onPointerDownOutside={onClose}>
                 <DialogHeader>
                     <DialogTitle className={darkMode ? "text-white" : "text-gray-900"}>
                         Search Documentation
@@ -124,15 +137,29 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                 </DialogHeader>
 
                 <Command className={darkMode ? "bg-gray-900" : "bg-white"}>
-                    <CommandInput
-                        placeholder="Type to search..."
-                        value={searchQuery}
-                        onValueChange={setSearchQuery}
-                        className={darkMode ? "border-gray-700 text-white" : "border-gray-200"}
-                    />
+                    <div
+                        className={`flex items-center border ${
+                            darkMode ? "border-gray-700" : "border-gray-300"
+                        } px-3 rounded-md mb-2`}>
+                        <Search className={`mr-2 h-4 w-4 shrink-0 ${darkMode ? "text-gray-400" : "text-gray-500"}`} />
+                        <CommandInput
+                            placeholder="Type to search..."
+                            value={searchQuery}
+                            onValueChange={setSearchQuery}
+                            className={`flex h-11 w-full py-3 text-sm bg-transparent outline-none border-0 ring-0 focus:ring-0 focus:outline-none ${
+                                darkMode
+                                    ? "text-white placeholder:text-gray-400"
+                                    : "text-gray-900 placeholder:text-gray-500"
+                            }`}
+                        />
+                    </div>
 
-                    <CommandList>
-                        <CommandEmpty>No results found.</CommandEmpty>
+                    <CommandList
+                        className={`max-h-[300px] overflow-y-auto ${darkMode ? "text-gray-100" : "text-gray-800"}`}>
+                        <CommandEmpty
+                            className={`py-6 text-center text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                            No results found.
+                        </CommandEmpty>
 
                         {["Getting Started", "Components", "API", "Features", "Examples"].map(category => {
                             const categoryItems = searchItems.filter(
@@ -146,15 +173,29 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                             if (categoryItems.length === 0) return null;
 
                             return (
-                                <CommandGroup key={category} heading={category}>
+                                <CommandGroup
+                                    key={category}
+                                    heading={category}
+                                    className={`pb-2 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
                                     {categoryItems.map(item => (
                                         <CommandItem
                                             key={item.id}
                                             value={item.id}
                                             onSelect={() => handleSelect(item)}
-                                            className="flex flex-col items-start">
-                                            <div className="text-base font-medium">{item.title}</div>
-                                            <div className="text-sm text-gray-500">{item.description}</div>
+                                            className={`flex flex-col items-start p-2 rounded-md cursor-pointer my-1 ${
+                                                darkMode
+                                                    ? "hover:bg-gray-800 aria-selected:bg-gray-800"
+                                                    : "hover:bg-gray-100 aria-selected:bg-gray-100"
+                                            }`}>
+                                            <div
+                                                className={`text-base font-medium ${
+                                                    darkMode ? "text-white" : "text-gray-900"
+                                                }`}>
+                                                {item.title}
+                                            </div>
+                                            <div className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                                                {item.description}
+                                            </div>
                                         </CommandItem>
                                     ))}
                                 </CommandGroup>
