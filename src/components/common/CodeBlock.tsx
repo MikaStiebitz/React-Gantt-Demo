@@ -49,8 +49,10 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language, showLineNumbers =
             // Manually set the language class to ensure proper highlighting
             codeRef.current.className = `language-${normalizedLanguage}`;
 
+            // Capture the element to ensure it's not null in the timeout callback
+            const highlightedEl = codeRef.current;
             // Force Prism to highlight the code
-            setTimeout(() => Prism.highlightElement(codeRef.current), 0);
+            setTimeout(() => Prism.highlightElement(highlightedEl), 0);
         }
     }, [code, normalizedLanguage, darkMode]);
 
