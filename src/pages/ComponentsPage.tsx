@@ -5,9 +5,6 @@ import CodeExample from "../components/demo/CodeExample";
 import GanttCodeExample from "../components/demo/GanttCodeExample";
 import { Link } from "react-router-dom";
 
-// Import shadcn components
-import { Card, CardContent } from "../components/ui/card";
-
 const ComponentsPage: React.FC = () => {
     const { darkMode } = useTheme();
     const [activeSection, setActiveSection] = useState("gantt-chart");

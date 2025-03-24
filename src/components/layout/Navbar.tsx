@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ThemeToggle from "../common/ThemeToggle";
 import { useTheme } from "../../context/ThemeContext";
-import { Menu, Search, BarChart, ChartGantt } from "lucide-react";
+import { Menu, Search, ChartGantt } from "lucide-react";
 import { motion } from "framer-motion";
 import SearchModal from "../common/SearchModal";
 
