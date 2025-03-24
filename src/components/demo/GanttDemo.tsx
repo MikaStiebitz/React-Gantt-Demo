@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Task, TaskGroup, ViewMode } from "react-modern-gantt";
 import { useTheme } from "../../context/ThemeContext";
 import GanttChart from "react-modern-gantt";
+// Wichtig: CSS-Import nicht vergessen
 import "react-modern-gantt/dist/index.css";
 
 const GanttDemo: React.FC = () => {
@@ -187,25 +188,52 @@ const GanttDemo: React.FC = () => {
                 </div>
             </div>
 
-            <div className={`rounded-lg border overflow-hidden ${darkMode ? "border-gray-700" : "border-gray-200"}`}>
-                <GanttChart
-                    tasks={tasks}
-                    title="Project Roadmap"
-                    headerLabel="Teams"
-                    showProgress={showProgress}
-                    editMode={editMode}
-                    darkMode={darkMode}
-                    onTaskUpdate={handleTaskUpdate}
-                    onViewModeChange={handleViewModeChange}
-                    viewMode={viewMode}
-                    styles={ganttStyles}
-                />
-            </div>
+            {/* Improved container with better styling */}
+            <div
+                className={`rounded-xl overflow-hidden ${darkMode ? "bg-gray-900" : "bg-white"}
+                ${darkMode ? "border border-gray-700" : "border border-gray-200"}
+                shadow-lg transition-all duration-300`}>
+                <div className="overflow-hidden">
+                    <GanttChart
+                        tasks={tasks}
+                        title="Project Roadmap"
+                        headerLabel="Teams"
+                        showProgress={showProgress}
+                        editMode={editMode}
+                        darkMode={darkMode}
+                        onTaskUpdate={handleTaskUpdate}
+                        onViewModeChange={handleViewModeChange}
+                        viewMode={viewMode}
+                        styles={ganttStyles}
+                    />
+                </div>
 
-            <div className="mt-4 text-center">
-                <p className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                    Try dragging tasks, resizing them, or adjusting progress bars to see the component in action.
-                </p>
+                <div
+                    className={`mt-4 p-4 text-center border-t border-dashed transition-colors ${
+                        darkMode ? "border-gray-700 bg-gray-800/50" : "border-gray-200 bg-gray-50/80"
+                    }`}>
+                    <p className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                        Try dragging tasks, resizing them, or adjusting progress bars to see the component in action.
+                    </p>
+                </div>
+
+                {/* CSS-Import Hinweis - neu gestaltet */}
+                <div
+                    className={`flex items-center justify-center py-3 border-t transition-colors ${
+                        darkMode ? "border-blue-800 bg-blue-900/30" : "border-blue-200 bg-blue-50"
+                    }`}>
+                    <div className="flex items-center gap-2">
+                        <span
+                            className={`px-2 py-1 text-xs font-semibold rounded ${
+                                darkMode ? "bg-blue-800 text-blue-200" : "bg-blue-100 text-blue-800"
+                            }`}>
+                            CSS
+                        </span>
+                        <code className={`text-sm font-mono ${darkMode ? "text-blue-300" : "text-blue-700"}`}>
+                            import "react-modern-gantt/dist/index.css"
+                        </code>
+                    </div>
+                </div>
             </div>
         </div>
     );

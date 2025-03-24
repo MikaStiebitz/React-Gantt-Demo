@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ThemeToggle from "../common/ThemeToggle";
 import { useTheme } from "../../context/ThemeContext";
-import { Menu, Search, BarChart } from "lucide-react";
+import { Menu, Search, BarChart, ChartGantt } from "lucide-react";
 import { motion } from "framer-motion";
 import SearchModal from "../common/SearchModal";
 
@@ -36,7 +36,7 @@ const Navbar: React.FC = () => {
                     <div className="flex justify-between h-16">
                         <div className="flex">
                             <div className="flex-shrink-0 flex items-center">
-                                <BarChart className={`h-8 w-8 ${darkMode ? "text-indigo-400" : "text-indigo-600"}`} />
+                                <ChartGantt className={`h-8 w-8 ${darkMode ? "text-indigo-400" : "text-indigo-600"}`} />
                                 <span className={`ml-2 text-xl font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>
                                     React Modern Gantt
                                 </span>

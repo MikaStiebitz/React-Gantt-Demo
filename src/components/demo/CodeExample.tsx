@@ -61,30 +61,39 @@ const CodeExample: React.FC<CodeExampleProps> = ({ title, description, code, lan
                 </CardHeader>
                 <CardContent className="p-0">
                     <Tabs defaultValue="demo" className="w-full">
+                        {/* Neu gestalteter Tab-Switch */}
                         <div
                             className={`px-4 py-3 border-b ${
-                                darkMode ? "bg-gray-700 border-gray-600" : "bg-gray-100 border-gray-200"
+                                darkMode ? "bg-gray-900/60 border-gray-700" : "bg-gray-50 border-gray-200"
                             }`}>
-                            <TabsList className={`grid w-64 grid-cols-2 ${darkMode ? "bg-gray-800" : "bg-white"}`}>
-                                <TabsTrigger
-                                    value="demo"
-                                    className={`text-base font-medium rounded-md px-4 py-2 ${
-                                        darkMode
-                                            ? "data-[state=active]:bg-indigo-600 data-[state=active]:text-white"
-                                            : "data-[state=active]:bg-indigo-100 data-[state=active]:text-indigo-800"
-                                    }`}>
-                                    Demo
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="code"
-                                    className={`text-base font-medium rounded-md px-4 py-2 ${
-                                        darkMode
-                                            ? "data-[state=active]:bg-indigo-600 data-[state=active]:text-white"
-                                            : "data-[state=active]:bg-indigo-100 data-[state=active]:text-indigo-800"
-                                    }`}>
-                                    Code
-                                </TabsTrigger>
-                            </TabsList>
+                            {/* Optimierte TabsList-Styling */}
+                            <div className="flex">
+                                <div
+                                    className={`overflow-hidden rounded-lg ${
+                                        darkMode ? "bg-gray-800/80" : "bg-white/80"
+                                    } shadow-sm p-1`}>
+                                    <TabsList className="flex gap-1 bg-transparent border-0">
+                                        <TabsTrigger
+                                            value="demo"
+                                            className={`px-6 py-2 rounded-md font-medium transition-all text-base min-w-20 ${
+                                                darkMode
+                                                    ? "data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-gray-300 data-[state=inactive]:hover:bg-gray-700"
+                                                    : "data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-gray-700 data-[state=inactive]:hover:bg-gray-100"
+                                            }`}>
+                                            Demo
+                                        </TabsTrigger>
+                                        <TabsTrigger
+                                            value="code"
+                                            className={`px-6 py-2 rounded-md font-medium transition-all text-base min-w-20 ${
+                                                darkMode
+                                                    ? "data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-gray-300 data-[state=inactive]:hover:bg-gray-700"
+                                                    : "data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-gray-700 data-[state=inactive]:hover:bg-gray-100"
+                                            }`}>
+                                            Code
+                                        </TabsTrigger>
+                                    </TabsList>
+                                </div>
+                            </div>
                         </div>
 
                         <TabsContent value="demo" className="p-6">

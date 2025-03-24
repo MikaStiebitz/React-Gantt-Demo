@@ -39,17 +39,38 @@ const ComponentsPage: React.FC = () => {
     // Navigation sections
     const sections = [
         { id: "gantt-chart", label: "GanttChart" },
+        { id: "styling", label: "CSS Styling" },
         { id: "task-interfaces", label: "Task Interfaces" },
         { id: "props", label: "Props" },
         { id: "events", label: "Event Handlers" },
         { id: "view-modes", label: "View Modes" },
         { id: "customization", label: "Customization" },
         { id: "examples", label: "Code Examples" },
+        { id: "troubleshooting", label: "Troubleshooting" },
     ];
 
     // Code examples
     const codeExamples = {
-        ganttChartImport: `import { GanttChart, ViewMode } from 'react-modern-gantt';`,
+        // Updated import example with CSS
+        ganttChartImport: `// Import components
+import { GanttChart, ViewMode } from 'react-modern-gantt';
+// ⚠️ IMPORTANT: Don't forget to import the CSS
+import 'react-modern-gantt/dist/index.css';`,
+
+        // CSS styling section - NEW
+        cssImport: `// Option 1: Import in your JS/TS file (Recommended)
+import 'react-modern-gantt/dist/index.css';
+
+// Option 2: Reference in your HTML
+<link rel="stylesheet" href="https://unpkg.com/react-modern-gantt@0.5.0/dist/index.css" />`,
+
+        troubleshooting: `// If your Gantt chart appears without styling, make sure you've imported the CSS
+import 'react-modern-gantt/dist/index.css';
+
+// This should be imported in:
+// - Your main application file (e.g., App.js, index.js)
+// - OR the component file where you use GanttChart
+// - OR a global CSS file that is imported in your application`,
 
         taskInterfaces: `// Task interface
 interface Task {
@@ -57,7 +78,7 @@ interface Task {
   name: string;       // Task name
   startDate: Date;    // Start date
   endDate: Date;      // End date
-  color?: string;     // Task color (Tailwind class or CSS color)
+  color?: string;     // Task color (CSS color value like "#3B82F6")
   percent?: number;   // Completion percentage (0-100)
   dependencies?: string[]; // IDs of dependent tasks
   [key: string]: any; // Additional custom properties
@@ -157,13 +178,14 @@ import { GanttChart, ViewMode } from 'react-modern-gantt';
   tasks={tasks}
   renderTask={({ task, leftPx, widthPx, topPx, isHovered, isDragging, showProgress }) => (
     <div
-      className={\`absolute h-8 rounded flex items-center px-2 \${
-        isHovered ? "ring-2 ring-blue-500" : ""
-      } \${task.color || "bg-blue-500"}\`}
+      className="absolute flex items-center px-2 rounded"
       style={{
         left: \`\${leftPx}px\`,
         width: \`\${widthPx}px\`,
         top: \`\${topPx}px\`,
+        height: '32px',
+        backgroundColor: task.color || "#3B82F6",
+        boxShadow: isHovered ? '0 0 0 2px rgba(59, 130, 246, 0.5)' : 'none',
       }}>
       <div className="text-white truncate">{task.name}</div>
       {showProgress && (
@@ -180,6 +202,8 @@ import { GanttChart, ViewMode } from 'react-modern-gantt';
 
         completeExample: `import React, { useState } from 'react';
 import { GanttChart, Task, TaskGroup, ViewMode } from 'react-modern-gantt';
+// ⚠️ IMPORTANT: Don't forget to import the CSS
+import 'react-modern-gantt/dist/index.css';
 
 const ProjectTimeline = () => {
   // Initialize tasks
@@ -194,7 +218,7 @@ const ProjectTimeline = () => {
           name: "UI Components",
           startDate: new Date(2023, 0, 5),
           endDate: new Date(2023, 2, 15),
-          color: "bg-blue-500",
+          color: "#3B82F6", // blue-500
           percent: 80,
         },
         {
@@ -202,7 +226,7 @@ const ProjectTimeline = () => {
           name: "Backend API",
           startDate: new Date(2023, 1, 10),
           endDate: new Date(2023, 3, 20),
-          color: "bg-emerald-500",
+          color: "#10B981", // emerald-500
           percent: 60,
         },
         // More tasks...
@@ -279,6 +303,198 @@ export default ProjectTimeline;`,
             transition: { duration: 0.5 },
         },
     };
+
+    // Props table data
+    const propsTableData = [
+        {
+            prop: "tasks",
+            type: "TaskGroup[]",
+            defaultValue: "[]",
+            description: "Array of task groups containing tasks",
+            isRequired: true,
+        },
+        {
+            prop: "title",
+            type: "string",
+            defaultValue: '"Project Timeline"',
+            description: "Title displayed at the top of the chart",
+            isRequired: false,
+        },
+        {
+            prop: "viewMode",
+            type: "ViewMode | string",
+            defaultValue: "ViewMode.MONTH",
+            description: "Timeline display mode (day, week, month, quarter, year)",
+            isRequired: false,
+        },
+        {
+            prop: "startDate",
+            type: "Date",
+            defaultValue: "Auto calculated",
+            description: "Optional start date for the timeline (defaults to earliest task date)",
+            isRequired: false,
+        },
+        {
+            prop: "endDate",
+            type: "Date",
+            defaultValue: "Auto calculated",
+            description: "Optional end date for the timeline (defaults to latest task date)",
+            isRequired: false,
+        },
+        {
+            prop: "currentDate",
+            type: "Date",
+            defaultValue: "new Date()",
+            description: "Date for the today marker",
+            isRequired: false,
+        },
+        {
+            prop: "showCurrentDateMarker",
+            type: "boolean",
+            defaultValue: "true",
+            description: "Whether to show the today marker",
+            isRequired: false,
+        },
+        {
+            prop: "todayLabel",
+            type: "string",
+            defaultValue: '"Today"',
+            description: "Label for today marker",
+            isRequired: false,
+        },
+        {
+            prop: "editMode",
+            type: "boolean",
+            defaultValue: "true",
+            description: "Whether tasks can be dragged/resized",
+            isRequired: false,
+        },
+        {
+            prop: "headerLabel",
+            type: "string",
+            defaultValue: '"Resources"',
+            description: "Header label for the task list column",
+            isRequired: false,
+        },
+        {
+            prop: "showProgress",
+            type: "boolean",
+            defaultValue: "false",
+            description: "Whether to show progress indicators",
+            isRequired: false,
+        },
+        {
+            prop: "darkMode",
+            type: "boolean",
+            defaultValue: "false",
+            description: "Whether to use dark mode theme",
+            isRequired: false,
+        },
+        {
+            prop: "viewModes",
+            type: "ViewMode[] | false",
+            defaultValue: "All modes",
+            description: "Array of allowed view modes or false to hide selector",
+            isRequired: false,
+        },
+        {
+            prop: "smoothDragging",
+            type: "boolean",
+            defaultValue: "true",
+            description: "Whether to use smooth animation for dragging",
+            isRequired: false,
+        },
+        {
+            prop: "animationSpeed",
+            type: "number",
+            defaultValue: "0.25",
+            description: "Speed of animations (0.1 to 1)",
+            isRequired: false,
+        },
+        {
+            prop: "styles",
+            type: "GanttStyles",
+            defaultValue: "{}",
+            description: "Custom CSS class names for styling",
+            isRequired: false,
+        },
+        {
+            prop: "locale",
+            type: "string",
+            defaultValue: '"default"',
+            description: "Locale for date formatting",
+            isRequired: false,
+        },
+        {
+            prop: "renderTask",
+            type: "function",
+            defaultValue: "undefined",
+            description: "Custom render function for task items",
+            isRequired: false,
+        },
+        {
+            prop: "renderTooltip",
+            type: "function",
+            defaultValue: "undefined",
+            description: "Custom render function for tooltips",
+            isRequired: false,
+        },
+        {
+            prop: "renderTaskList",
+            type: "function",
+            defaultValue: "undefined",
+            description: "Custom render function for the task list",
+            isRequired: false,
+        },
+        {
+            prop: "renderHeader",
+            type: "function",
+            defaultValue: "undefined",
+            description: "Custom render function for the header",
+            isRequired: false,
+        },
+        {
+            prop: "getTaskColor",
+            type: "function",
+            defaultValue: "undefined",
+            description: "Function to determine task colors",
+            isRequired: false,
+        },
+    ];
+
+    // Events table data
+    const eventsTableData = [
+        {
+            event: "onTaskUpdate",
+            type: "(groupId: string, updatedTask: Task) => void",
+            description: "Called when a task is moved, resized, or progress updated",
+        },
+        {
+            event: "onTaskClick",
+            type: "(task: Task, group: TaskGroup) => void",
+            description: "Called when a task is clicked",
+        },
+        {
+            event: "onTaskSelect",
+            type: "(task: Task, isSelected: boolean) => void",
+            description: "Called when a task is selected or deselected",
+        },
+        {
+            event: "onTaskDoubleClick",
+            type: "(task: Task) => void",
+            description: "Called when a task is double-clicked",
+        },
+        {
+            event: "onGroupClick",
+            type: "(group: TaskGroup) => void",
+            description: "Called when a task group is clicked",
+        },
+        {
+            event: "onViewModeChange",
+            type: "(viewMode: ViewMode) => void",
+            description: "Called when the view mode changes",
+        },
+    ];
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -357,10 +573,105 @@ export default ProjectTimeline;`,
 
                         <CodeExample
                             title="Importing the Component"
-                            description="Start by importing the GanttChart component and any related types you need."
+                            description="Start by importing the GanttChart component, styles, and any related types you need."
                             code={codeExamples.ganttChartImport}
                             language="javascript"
                         />
+
+                        <div
+                            className={`mt-6 p-4 border-l-4 mb-8 ${
+                                darkMode
+                                    ? "bg-gray-800 border-amber-500 text-amber-200"
+                                    : "bg-amber-50 border-amber-500 text-amber-700"
+                            }`}>
+                            <div className="flex">
+                                <div className="flex-shrink-0">
+                                    <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <div className="ml-3">
+                                    <p className="text-sm">
+                                        <strong>IMPORTANT:</strong> Don't forget to import the CSS file! Without this
+                                        import, the component will not be styled correctly.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.section>
+
+                    {/* CSS Styling Section - NEW */}
+                    <motion.section
+                        id="styling"
+                        className="mb-16 scroll-mt-24"
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={sectionVariants}>
+                        <h2 className={`text-2xl font-bold mb-4 ${darkMode ? "text-white" : "text-gray-900"}`}>
+                            CSS Styling
+                        </h2>
+                        <p className={`mb-6 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            The Gantt chart requires CSS styles that are shipped separately from the component code. You
+                            need to explicitly import these styles for the component to render correctly.
+                        </p>
+
+                        <CodeExample
+                            title="Importing Styles"
+                            description="There are two ways to include the necessary CSS styles."
+                            code={codeExamples.cssImport}
+                            language="javascript"
+                        />
+
+                        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div
+                                className={`p-6 rounded-lg ${darkMode ? "bg-gray-800" : "bg-white"} border ${
+                                    darkMode ? "border-gray-700" : "border-gray-200"
+                                }`}>
+                                <h3
+                                    className={`text-lg font-semibold mb-3 ${
+                                        darkMode ? "text-white" : "text-gray-900"
+                                    }`}>
+                                    ✅ With CSS Import
+                                </h3>
+                                <div className="h-32 border rounded overflow-hidden flex items-center justify-center bg-white">
+                                    <img
+                                        src="https://placeholder.pics/svg/300x100/DEDEDE/555555/With%20CSS%20Styling"
+                                        alt="With CSS Import - Styled Gantt Chart"
+                                        className="max-w-full max-h-full"
+                                    />
+                                </div>
+                                <p className={`mt-3 text-sm ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                                    Properly styled with borders, colors, and interactive elements.
+                                </p>
+                            </div>
+
+                            <div
+                                className={`p-6 rounded-lg ${darkMode ? "bg-gray-800" : "bg-white"} border ${
+                                    darkMode ? "border-gray-700" : "border-gray-200"
+                                }`}>
+                                <h3
+                                    className={`text-lg font-semibold mb-3 ${
+                                        darkMode ? "text-white" : "text-gray-900"
+                                    }`}>
+                                    ❌ Without CSS Import
+                                </h3>
+                                <div className="h-32 border rounded overflow-hidden flex items-center justify-center bg-white">
+                                    <img
+                                        src="https://placeholder.pics/svg/300x100/FFFFFF/999999/Unstyled%20Components"
+                                        alt="Without CSS Import - Unstyled Gantt Chart"
+                                        className="max-w-full max-h-full"
+                                    />
+                                </div>
+                                <p className={`mt-3 text-sm ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                                    Missing styles, layout issues, and reduced functionality.
+                                </p>
+                            </div>
+                        </div>
                     </motion.section>
 
                     {/* Task Interfaces Section */}
@@ -396,100 +707,131 @@ export default ProjectTimeline;`,
                         viewport={{ once: true }}
                         variants={sectionVariants}>
                         <h2 className={`text-2xl font-bold mb-4 ${darkMode ? "text-white" : "text-gray-900"}`}>
-                            Core Props
+                            Props Reference
                         </h2>
                         <p className={`mb-6 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
-                            The GanttChart component accepts several props to customize its behavior and appearance.
+                            The GanttChart component accepts the following props to customize its behavior and
+                            appearance.
                         </p>
 
+                        {/* New detailed Props Table */}
+                        <div
+                            className={`overflow-x-auto rounded-lg border ${
+                                darkMode ? "border-gray-700" : "border-gray-200"
+                            } mb-8`}>
+                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead className={darkMode ? "bg-gray-800" : "bg-gray-50"}>
+                                    <tr>
+                                        <th
+                                            scope="col"
+                                            className={`px-6 py-3 text-left text-xs font-medium ${
+                                                darkMode
+                                                    ? "text-gray-300 uppercase tracking-wider"
+                                                    : "text-gray-500 uppercase tracking-wider"
+                                            }`}>
+                                            Prop
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className={`px-6 py-3 text-left text-xs font-medium ${
+                                                darkMode
+                                                    ? "text-gray-300 uppercase tracking-wider"
+                                                    : "text-gray-500 uppercase tracking-wider"
+                                            }`}>
+                                            Type
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className={`px-6 py-3 text-left text-xs font-medium ${
+                                                darkMode
+                                                    ? "text-gray-300 uppercase tracking-wider"
+                                                    : "text-gray-500 uppercase tracking-wider"
+                                            }`}>
+                                            Default
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className={`px-6 py-3 text-left text-xs font-medium ${
+                                                darkMode
+                                                    ? "text-gray-300 uppercase tracking-wider"
+                                                    : "text-gray-500 uppercase tracking-wider"
+                                            }`}>
+                                            Description
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className={`px-6 py-3 text-left text-xs font-medium ${
+                                                darkMode
+                                                    ? "text-gray-300 uppercase tracking-wider"
+                                                    : "text-gray-500 uppercase tracking-wider"
+                                            }`}>
+                                            Required
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody
+                                    className={`divide-y ${
+                                        darkMode ? "divide-gray-700 bg-gray-900" : "divide-gray-200 bg-white"
+                                    }`}>
+                                    {propsTableData.map((prop, index) => (
+                                        <tr
+                                            key={prop.prop}
+                                            className={
+                                                index % 2 === 0
+                                                    ? darkMode
+                                                        ? "bg-gray-900"
+                                                        : "bg-white"
+                                                    : darkMode
+                                                    ? "bg-gray-800/50"
+                                                    : "bg-gray-50"
+                                            }>
+                                            <td
+                                                className={`px-6 py-4 text-sm font-medium ${
+                                                    darkMode ? "text-indigo-400" : "text-indigo-600"
+                                                }`}>
+                                                {prop.prop}
+                                            </td>
+                                            <td
+                                                className={`px-6 py-4 text-sm font-mono text-xs ${
+                                                    darkMode ? "text-gray-300" : "text-gray-600"
+                                                }`}>
+                                                {prop.type}
+                                            </td>
+                                            <td
+                                                className={`px-6 py-4 text-sm ${
+                                                    darkMode ? "text-gray-300" : "text-gray-600"
+                                                }`}>
+                                                {prop.defaultValue}
+                                            </td>
+                                            <td
+                                                className={`px-6 py-4 text-sm ${
+                                                    darkMode ? "text-gray-300" : "text-gray-600"
+                                                }`}>
+                                                {prop.description}
+                                            </td>
+                                            <td
+                                                className={`px-6 py-4 text-sm ${
+                                                    prop.isRequired
+                                                        ? darkMode
+                                                            ? "text-red-400"
+                                                            : "text-red-600"
+                                                        : darkMode
+                                                        ? "text-gray-500"
+                                                        : "text-gray-500"
+                                                }`}>
+                                                {prop.isRequired ? "Yes" : "No"}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
                         <GanttCodeExample
-                            title="Basic Props"
-                            description="Here are the most commonly used props for configuring the GanttChart."
+                            title="Basic Props Example"
+                            description="Here's how to use some of the most common props."
                             code={codeExamples.coreProps}
                         />
-
-                        <Card
-                            className={`mt-8 ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}>
-                            <CardContent className="pt-6">
-                                <h3
-                                    className={`text-lg font-semibold mb-4 ${
-                                        darkMode ? "text-white" : "text-gray-900"
-                                    }`}>
-                                    Props Reference
-                                </h3>
-
-                                <div className={`overflow-x-auto ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
-                                    <table className="min-w-full">
-                                        <thead>
-                                            <tr
-                                                className={`border-b ${
-                                                    darkMode ? "border-gray-700" : "border-gray-200"
-                                                }`}>
-                                                <th className="text-left py-3 px-4 font-semibold">Prop</th>
-                                                <th className="text-left py-3 px-4 font-semibold">Type</th>
-                                                <th className="text-left py-3 px-4 font-semibold">Default</th>
-                                                <th className="text-left py-3 px-4 font-semibold">Description</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr
-                                                className={`border-b ${
-                                                    darkMode ? "border-gray-700" : "border-gray-200"
-                                                }`}>
-                                                <td className="py-3 px-4 font-medium">tasks</td>
-                                                <td className="py-3 px-4">TaskGroup[]</td>
-                                                <td className="py-3 px-4">[]</td>
-                                                <td className="py-3 px-4">Array of task groups</td>
-                                            </tr>
-                                            <tr
-                                                className={`border-b ${
-                                                    darkMode ? "border-gray-700" : "border-gray-200"
-                                                }`}>
-                                                <td className="py-3 px-4 font-medium">title</td>
-                                                <td className="py-3 px-4">string</td>
-                                                <td className="py-3 px-4">"Project Timeline"</td>
-                                                <td className="py-3 px-4">Title displayed at the top of the chart</td>
-                                            </tr>
-                                            <tr
-                                                className={`border-b ${
-                                                    darkMode ? "border-gray-700" : "border-gray-200"
-                                                }`}>
-                                                <td className="py-3 px-4 font-medium">viewMode</td>
-                                                <td className="py-3 px-4">ViewMode</td>
-                                                <td className="py-3 px-4">ViewMode.MONTH</td>
-                                                <td className="py-3 px-4">
-                                                    Timeline display mode (day, week, month, quarter, year)
-                                                </td>
-                                            </tr>
-                                            <tr
-                                                className={`border-b ${
-                                                    darkMode ? "border-gray-700" : "border-gray-200"
-                                                }`}>
-                                                <td className="py-3 px-4 font-medium">editMode</td>
-                                                <td className="py-3 px-4">boolean</td>
-                                                <td className="py-3 px-4">true</td>
-                                                <td className="py-3 px-4">Whether tasks can be dragged/resized</td>
-                                            </tr>
-                                            <tr
-                                                className={`border-b ${
-                                                    darkMode ? "border-gray-700" : "border-gray-200"
-                                                }`}>
-                                                <td className="py-3 px-4 font-medium">showProgress</td>
-                                                <td className="py-3 px-4">boolean</td>
-                                                <td className="py-3 px-4">false</td>
-                                                <td className="py-3 px-4">Whether to show progress indicators</td>
-                                            </tr>
-                                            <tr>
-                                                <td className="py-3 px-4 font-medium">darkMode</td>
-                                                <td className="py-3 px-4">boolean</td>
-                                                <td className="py-3 px-4">false</td>
-                                                <td className="py-3 px-4">Whether to use dark mode theme</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </CardContent>
-                        </Card>
                     </motion.section>
 
                     {/* Event Handlers Section */}
@@ -507,8 +849,85 @@ export default ProjectTimeline;`,
                             The GanttChart component provides several event handlers to respond to user interactions.
                         </p>
 
+                        {/* New Events Table */}
+                        <div
+                            className={`overflow-x-auto rounded-lg border ${
+                                darkMode ? "border-gray-700" : "border-gray-200"
+                            } mb-8`}>
+                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead className={darkMode ? "bg-gray-800" : "bg-gray-50"}>
+                                    <tr>
+                                        <th
+                                            scope="col"
+                                            className={`px-6 py-3 text-left text-xs font-medium ${
+                                                darkMode
+                                                    ? "text-gray-300 uppercase tracking-wider"
+                                                    : "text-gray-500 uppercase tracking-wider"
+                                            }`}>
+                                            Event Handler
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className={`px-6 py-3 text-left text-xs font-medium ${
+                                                darkMode
+                                                    ? "text-gray-300 uppercase tracking-wider"
+                                                    : "text-gray-500 uppercase tracking-wider"
+                                            }`}>
+                                            Type
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className={`px-6 py-3 text-left text-xs font-medium ${
+                                                darkMode
+                                                    ? "text-gray-300 uppercase tracking-wider"
+                                                    : "text-gray-500 uppercase tracking-wider"
+                                            }`}>
+                                            Description
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody
+                                    className={`divide-y ${
+                                        darkMode ? "divide-gray-700 bg-gray-900" : "divide-gray-200 bg-white"
+                                    }`}>
+                                    {eventsTableData.map((event, index) => (
+                                        <tr
+                                            key={event.event}
+                                            className={
+                                                index % 2 === 0
+                                                    ? darkMode
+                                                        ? "bg-gray-900"
+                                                        : "bg-white"
+                                                    : darkMode
+                                                    ? "bg-gray-800/50"
+                                                    : "bg-gray-50"
+                                            }>
+                                            <td
+                                                className={`px-6 py-4 text-sm font-medium ${
+                                                    darkMode ? "text-green-400" : "text-green-600"
+                                                }`}>
+                                                {event.event}
+                                            </td>
+                                            <td
+                                                className={`px-6 py-4 text-sm font-mono text-xs ${
+                                                    darkMode ? "text-gray-300" : "text-gray-600"
+                                                }`}>
+                                                {event.type}
+                                            </td>
+                                            <td
+                                                className={`px-6 py-4 text-sm ${
+                                                    darkMode ? "text-gray-300" : "text-gray-600"
+                                                }`}>
+                                                {event.description}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
                         <GanttCodeExample
-                            title="Event Handlers"
+                            title="Event Handlers Example"
                             description="Use these event handlers to respond to user actions."
                             code={codeExamples.eventHandlers}
                         />
@@ -555,7 +974,7 @@ export default ProjectTimeline;`,
 
                         <GanttCodeExample
                             title="Custom Styling"
-                            description="Customize the appearance of the Gantt chart using Tailwind CSS classes."
+                            description="Customize the appearance of the Gantt chart using custom class names."
                             code={codeExamples.customStyling}
                         />
                     </motion.section>
@@ -573,14 +992,78 @@ export default ProjectTimeline;`,
                         </h2>
                         <p className={`mb-6 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
                             Here's a complete example showing how to use the GanttChart component with state management
-                            and event handling.
+                            and event handling. Notice the CSS import at the top!
                         </p>
 
                         <GanttCodeExample
                             title="Complete Example"
-                            description="A full implementation of the GanttChart with state management."
+                            description="A full implementation of the GanttChart with state management and styling."
                             code={codeExamples.completeExample}
                         />
+                    </motion.section>
+
+                    {/* Troubleshooting Section - NEW */}
+                    <motion.section
+                        id="troubleshooting"
+                        className="mb-16 scroll-mt-24"
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={sectionVariants}>
+                        <h2 className={`text-2xl font-bold mb-4 ${darkMode ? "text-white" : "text-gray-900"}`}>
+                            Troubleshooting
+                        </h2>
+                        <p className={`mb-6 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            Here are solutions to common issues you might encounter when using the GanttChart component.
+                        </p>
+
+                        <div
+                            className={`p-4 border-l-4 mb-6 ${
+                                darkMode
+                                    ? "bg-gray-800 border-indigo-500 text-indigo-300"
+                                    : "bg-indigo-50 border-indigo-500 text-indigo-700"
+                            }`}>
+                            <h3 className="font-bold mb-2">Missing Styles</h3>
+                            <p className="text-sm mb-2">
+                                The most common issue is forgetting to import the CSS file. If your Gantt chart appears
+                                unstyled (no borders, colors, or proper layout), you need to import the CSS.
+                            </p>
+                            <CodeExample
+                                title="Fix Missing Styles"
+                                description="Make sure you've imported the CSS file in your application."
+                                code={codeExamples.troubleshooting}
+                                language="javascript"
+                            />
+                        </div>
+
+                        <div
+                            className={`p-6 rounded-lg ${darkMode ? "bg-gray-800" : "bg-white"} border ${
+                                darkMode ? "border-gray-700" : "border-gray-200"
+                            }`}>
+                            <h3 className={`text-lg font-semibold mb-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
+                                Common Issues
+                            </h3>
+                            <ul className={`ml-5 list-disc space-y-2 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                                <li>
+                                    <strong>Missing Styles:</strong> Import the CSS file with{" "}
+                                    <code className={`px-1 rounded ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}>
+                                        import "react-modern-gantt/dist/index.css"
+                                    </code>
+                                </li>
+                                <li>
+                                    <strong>Invalid Date Objects:</strong> Ensure all dates are valid JavaScript Date
+                                    objects
+                                </li>
+                                <li>
+                                    <strong>Task ID Conflicts:</strong> Make sure each task has a unique ID within the
+                                    entire dataset
+                                </li>
+                                <li>
+                                    <strong>Incorrect Data Structure:</strong> Verify your data follows the Task and
+                                    TaskGroup interfaces
+                                </li>
+                            </ul>
+                        </div>
                     </motion.section>
 
                     {/* Back to top button with animation */}
