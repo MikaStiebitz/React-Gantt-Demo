@@ -1,3 +1,5 @@
+// In src/components/demo/CodeExample.tsx
+
 import React from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "../../context/ThemeContext";
@@ -14,9 +16,17 @@ interface CodeExampleProps {
     language: string;
     demoComponent?: React.ReactNode; // Optional demo component
     showCopyButton?: boolean;
+    defaultTab?: "demo" | "code"; // NEW: Allow setting the default tab
 }
 
-const CodeExample: React.FC<CodeExampleProps> = ({ title, description, code, language, demoComponent }) => {
+const CodeExample: React.FC<CodeExampleProps> = ({
+    title,
+    description,
+    code,
+    language,
+    demoComponent,
+    defaultTab = "demo", // Default to 'demo' if not specified
+}) => {
     const { darkMode } = useTheme();
 
     // If no demo component is provided, just show the code example
@@ -60,13 +70,13 @@ const CodeExample: React.FC<CodeExampleProps> = ({ title, description, code, lan
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
-                    <Tabs defaultValue="demo" className="w-full">
-                        {/* Neu gestalteter Tab-Switch */}
+                    <Tabs defaultValue={defaultTab} className="w-full">
+                        {/* Updated tab switch */}
                         <div
                             className={`px-4 py-3 border-b ${
                                 darkMode ? "bg-gray-900/60 border-gray-700" : "bg-gray-50 border-gray-200"
                             }`}>
-                            {/* Optimierte TabsList-Styling */}
+                            {/* Optimized TabsList styling */}
                             <div className="flex">
                                 <div
                                     className={`overflow-hidden rounded-lg ${

@@ -1,3 +1,5 @@
+// In src/components/demo/GanttCodeExample.tsx
+
 import React, { useState } from "react";
 import { useTheme } from "../../context/ThemeContext";
 import GanttChart, { Task, TaskGroup, ViewMode } from "react-modern-gantt";
@@ -9,9 +11,15 @@ interface GanttCodeExampleProps {
     title: string;
     description?: string;
     code: string;
+    defaultTab?: "demo" | "code"; // NEW: Allow setting the default tab
 }
 
-const GanttCodeExample: React.FC<GanttCodeExampleProps> = ({ title, description, code }) => {
+const GanttCodeExample: React.FC<GanttCodeExampleProps> = ({
+    title,
+    description,
+    code,
+    defaultTab = "demo", // Default to 'demo' if not specified
+}) => {
     const { darkMode } = useTheme();
 
     // Generate demo task data relative to current date
@@ -204,6 +212,9 @@ const GanttCodeExample: React.FC<GanttCodeExampleProps> = ({ title, description,
                         container: "",
                         title: "text-xl font-bold",
                         taskList: `border-r ${darkMode ? "border-gray-700" : "border-gray-200"}`,
+                        timeline: "my-timeline",
+                        todayMarker: "my-today-marker",
+                        taskRow: "my-task-row",
                         tooltip: `${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"} shadow-lg`,
                     }}
                 />
@@ -250,6 +261,7 @@ const GanttCodeExample: React.FC<GanttCodeExampleProps> = ({ title, description,
             code={code}
             language="tsx"
             demoComponent={<DemoComponent />}
+            defaultTab={defaultTab}
         />
     );
 };

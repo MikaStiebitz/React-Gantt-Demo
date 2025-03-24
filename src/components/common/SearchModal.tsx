@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+// In src/components/common/SearchModal.tsx
+
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { Search } from "lucide-react";
@@ -13,6 +15,7 @@ interface SearchItem {
     path: string;
     category: string;
     description: string;
+    keywords?: string[]; // Additional keywords for better search
 }
 
 // Component sections data
@@ -23,6 +26,7 @@ const searchItems: SearchItem[] = [
         path: "/components#gantt-chart",
         category: "Components",
         description: "Main component for rendering a Gantt chart",
+        keywords: ["gantt", "chart", "timeline", "component", "main"],
     },
     {
         id: "task-interfaces",
@@ -30,6 +34,7 @@ const searchItems: SearchItem[] = [
         path: "/components#task-interfaces",
         category: "API",
         description: "Interfaces for structuring task data",
+        keywords: ["task", "interface", "data structure", "type"],
     },
     {
         id: "props",
@@ -37,6 +42,7 @@ const searchItems: SearchItem[] = [
         path: "/components#props",
         category: "API",
         description: "Core props for the GanttChart component",
+        keywords: ["props", "properties", "configuration", "options"],
     },
     {
         id: "events",
@@ -44,6 +50,7 @@ const searchItems: SearchItem[] = [
         path: "/components#events",
         category: "API",
         description: "Event handlers for the GanttChart component",
+        keywords: ["events", "handlers", "callbacks", "listeners"],
     },
     {
         id: "view-modes",
@@ -51,6 +58,7 @@ const searchItems: SearchItem[] = [
         path: "/components#view-modes",
         category: "Features",
         description: "Different timeline view modes (day, week, month, quarter, year)",
+        keywords: ["view", "modes", "day", "week", "month", "quarter", "year"],
     },
     {
         id: "customization",
@@ -58,6 +66,15 @@ const searchItems: SearchItem[] = [
         path: "/components#customization",
         category: "Features",
         description: "Customize the appearance of the Gantt chart",
+        keywords: ["customize", "style", "theme", "appearance"],
+    },
+    {
+        id: "custom-rendering",
+        title: "Custom Rendering",
+        path: "/components#custom-rendering",
+        category: "Features",
+        description: "Custom rendering functions for tasks and components",
+        keywords: ["render", "custom", "renderTask", "renderTooltip"],
     },
     {
         id: "examples",
@@ -65,6 +82,7 @@ const searchItems: SearchItem[] = [
         path: "/components#examples",
         category: "Examples",
         description: "Complete code examples",
+        keywords: ["example", "code", "sample", "demo"],
     },
     {
         id: "installation",
@@ -72,6 +90,23 @@ const searchItems: SearchItem[] = [
         path: "/#installation",
         category: "Getting Started",
         description: "Installation instructions",
+        keywords: ["install", "npm", "yarn", "setup"],
+    },
+    {
+        id: "styling",
+        title: "CSS Styling",
+        path: "/components#styling",
+        category: "Features",
+        description: "CSS styling and theme customization",
+        keywords: ["css", "styles", "styling", "theme"],
+    },
+    {
+        id: "troubleshooting",
+        title: "Troubleshooting",
+        path: "/components#troubleshooting",
+        category: "Support",
+        description: "Common issues and solutions",
+        keywords: ["troubleshoot", "issues", "problems", "errors", "help"],
     },
 ];
 
@@ -92,21 +127,64 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
             if (input) {
                 setTimeout(() => input.focus(), 100);
             }
+            // Reset search query when modal opens
+            setSearchQuery("");
         }
     }, [isOpen]);
 
-    // Handle escape key press to close modal
-    useEffect(() => {
-        const handleEsc = (event: KeyboardEvent) => {
-            if (event.key === "Escape") {
-                onClose();
-            }
-        };
-        window.addEventListener("keydown", handleEsc);
-        return () => {
-            window.removeEventListener("keydown", handleEsc);
-        };
-    }, [onClose]);
+    // Enhanced search function using keywords and fuzzy matching
+    const filteredItems = useMemo(() => {
+        if (!searchQuery.trim()) return searchItems;
+
+        const lowerQuery = searchQuery.toLowerCase().trim();
+        const queryWords = lowerQuery.split(/\s+/);
+
+        // Score-based filtering
+        return searchItems
+            .map(item => {
+                // Calculate match score
+                let score = 0;
+
+                // Check title match (highest priority)
+                if (item.title.toLowerCase().includes(lowerQuery)) {
+                    score += 10;
+                }
+
+                // Check description match
+                if (item.description.toLowerCase().includes(lowerQuery)) {
+                    score += 5;
+                }
+
+                // Check for partial word matches in title and description
+                queryWords.forEach(word => {
+                    if (item.title.toLowerCase().includes(word)) score += 3;
+                    if (item.description.toLowerCase().includes(word)) score += 2;
+                });
+
+                // Check keyword matches
+                if (item.keywords) {
+                    item.keywords.forEach(keyword => {
+                        if (keyword.toLowerCase().includes(lowerQuery)) {
+                            score += 4;
+                        }
+
+                        // Partial keyword matches
+                        queryWords.forEach(word => {
+                            if (keyword.toLowerCase().includes(word)) score += 2;
+                        });
+                    });
+                }
+
+                // Check category match
+                if (item.category.toLowerCase().includes(lowerQuery)) {
+                    score += 3;
+                }
+
+                return { ...item, score };
+            })
+            .filter(item => item.score > 0)
+            .sort((a, b) => b.score - a.score);
+    }, [searchQuery]);
 
     // Handle item selection
     const handleSelect = (item: SearchItem) => {
@@ -155,20 +233,16 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                     </div>
 
                     <CommandList
-                        className={`max-h-[300px] overflow-y-auto ${darkMode ? "text-gray-100" : "text-gray-800"}`}>
+                        className={`max-h-[300px] overflow-y-auto overflow-x-hidden ${
+                            darkMode ? "text-gray-100" : "text-gray-800"
+                        }`}>
                         <CommandEmpty
                             className={`py-6 text-center text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                            No results found.
+                            No results found. Try a different search term.
                         </CommandEmpty>
 
-                        {["Getting Started", "Components", "API", "Features", "Examples"].map(category => {
-                            const categoryItems = searchItems.filter(
-                                item =>
-                                    item.category === category &&
-                                    (searchQuery === "" ||
-                                        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                        item.description.toLowerCase().includes(searchQuery.toLowerCase()))
-                            );
+                        {["Getting Started", "Components", "API", "Features", "Examples", "Support"].map(category => {
+                            const categoryItems = filteredItems.filter(item => item.category === category);
 
                             if (categoryItems.length === 0) return null;
 
@@ -203,6 +277,11 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                         })}
                     </CommandList>
                 </Command>
+
+                <div className={`mt-2 text-xs ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
+                    Press <kbd className="px-1 py-0.5 rounded border">Esc</kbd> to close or{" "}
+                    <kbd className="px-1 py-0.5 rounded border">↵</kbd> to select
+                </div>
             </DialogContent>
         </Dialog>
     );

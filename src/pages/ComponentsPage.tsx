@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
 import CodeExample from "../components/demo/CodeExample";
@@ -8,8 +8,33 @@ import { Link } from "react-router-dom";
 const ComponentsPage: React.FC = () => {
     const { darkMode } = useTheme();
     const [activeSection, setActiveSection] = useState("gantt-chart");
+    // Add refs for tracking sections
+    const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
-    // Watch for hash changes to update the active section
+    // Sections array (add the new custom-rendering section)
+    const sections = [
+        { id: "gantt-chart", label: "GanttChart" },
+        { id: "styling", label: "CSS Styling" },
+        { id: "task-interfaces", label: "Task Interfaces" },
+        { id: "props", label: "Props" },
+        { id: "events", label: "Event Handlers" },
+        { id: "view-modes", label: "View Modes" },
+        { id: "customization", label: "Customization" },
+        { id: "custom-rendering", label: "Custom Rendering" }, // New section
+        { id: "examples", label: "Code Examples" },
+        { id: "troubleshooting", label: "Troubleshooting" },
+    ];
+
+    // Initialize section refs
+    useEffect(() => {
+        sectionRefs.current = sections.reduce((acc, section) => {
+            acc[section.id] = document.getElementById(section.id);
+            return acc;
+        }, {} as Record<string, HTMLElement | null>);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Handle URL hash changes
     useEffect(() => {
         const handleHashChange = () => {
             const hash = window.location.hash.substring(1);
@@ -33,18 +58,43 @@ const ComponentsPage: React.FC = () => {
         };
     }, []);
 
-    // Navigation sections
-    const sections = [
-        { id: "gantt-chart", label: "GanttChart" },
-        { id: "styling", label: "CSS Styling" },
-        { id: "task-interfaces", label: "Task Interfaces" },
-        { id: "props", label: "Props" },
-        { id: "events", label: "Event Handlers" },
-        { id: "view-modes", label: "View Modes" },
-        { id: "customization", label: "Customization" },
-        { id: "examples", label: "Code Examples" },
-        { id: "troubleshooting", label: "Troubleshooting" },
-    ];
+    // Add scroll spy functionality
+    useEffect(() => {
+        const handleScroll = () => {
+            // Get current scroll position
+            const scrollPosition = window.scrollY + 100; // Adding offset to improve detection
+
+            // Find the section that is currently visible
+            const currentSection = sections.find(section => {
+                const element = sectionRefs.current[section.id];
+                if (!element) return false;
+
+                const offsetTop = element.offsetTop;
+                const offsetHeight = element.offsetHeight;
+
+                return scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight;
+            });
+
+            // Update active section if a section is found
+            if (currentSection && currentSection.id !== activeSection) {
+                setActiveSection(currentSection.id);
+
+                // Update URL hash without scrolling
+                const newUrl = `${window.location.pathname}#${currentSection.id}`;
+                window.history.replaceState(null, "", newUrl);
+            }
+        };
+
+        // Add scroll event listener
+        window.addEventListener("scroll", handleScroll);
+        // Run once to set initial state
+        handleScroll();
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeSection]);
 
     // Code examples
     const codeExamples = {
@@ -141,21 +191,23 @@ interface TaskGroup {
   }}
 />`,
 
-        viewModes: `// Using string literals
-<GanttChart tasks={tasks} viewMode="day" />
-<GanttChart tasks={tasks} viewMode="week" />
-<GanttChart tasks={tasks} viewMode="month" /> // Default
-<GanttChart tasks={tasks} viewMode="quarter" />
-<GanttChart tasks={tasks} viewMode="year" />
-
-// Using the ViewMode enum
+        viewModes: `
+// Set default view mode
 import { GanttChart, ViewMode } from 'react-modern-gantt';
 
+<GanttChart tasks={tasks} viewMode={ViewMode.MINUTE} />
+<GanttChart tasks={tasks} viewMode={ViewMode.HOUR} />
 <GanttChart tasks={tasks} viewMode={ViewMode.DAY} />
 <GanttChart tasks={tasks} viewMode={ViewMode.WEEK} />
 <GanttChart tasks={tasks} viewMode={ViewMode.MONTH} />
 <GanttChart tasks={tasks} viewMode={ViewMode.QUARTER} />
-<GanttChart tasks={tasks} viewMode={ViewMode.YEAR} />`,
+<GanttChart tasks={tasks} viewMode={ViewMode.YEAR} />
+
+// Custom view mode selector
+<GanttChart tasks={tasks} viewModes={[ViewMode.MINUTE, ViewMode.HOUR]} />
+<GanttChart tasks={tasks} viewModes={[ViewMode.DAY, ViewMode.WEEK, ViewMode.MONTH]} />
+<GanttChart tasks={tasks} viewModes={[ViewMode.YEAR, ViewMode.QUARTER]} />
+<GanttChart tasks={tasks} viewModes={false} /> // Hide view mode selector`,
 
         customStyling: `<GanttChart
   tasks={tasks}
@@ -974,6 +1026,217 @@ export default ProjectTimeline;`,
                             description="Customize the appearance of the Gantt chart using custom class names."
                             code={codeExamples.customStyling}
                         />
+                    </motion.section>
+
+                    {/* Custom Rendering Section */}
+                    <motion.section
+                        id="custom-rendering"
+                        className="mb-16 scroll-mt-24"
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={sectionVariants}>
+                        <h2 className={`text-2xl font-bold mb-4 ${darkMode ? "text-white" : "text-gray-900"}`}>
+                            Custom Rendering
+                        </h2>
+                        <p className={`mb-6 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            One of the most powerful features of the GanttChart component is the ability to customize
+                            how different parts of the chart are rendered. This allows for complete visual control and
+                            advanced functionality.
+                        </p>
+
+                        <div className="mb-8">
+                            <h3 className={`text-xl font-semibold mb-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
+                                Custom Task Rendering
+                            </h3>
+                            <p className={`mb-4 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                                The <code>renderTask</code> prop allows you to completely customize how tasks are
+                                displayed in the timeline. This gives you full control over the task's appearance and
+                                behavior.
+                            </p>
+
+                            <CodeExample
+                                title="Custom Task Rendering"
+                                description="Replace the default task rendering with your own custom implementation."
+                                code={codeExamples.customTaskRender}
+                                language="jsx"
+                                defaultTab="code"
+                            />
+                        </div>
+
+                        <div className="mb-8">
+                            <h3 className={`text-xl font-semibold mb-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
+                                Custom Tooltip Rendering
+                            </h3>
+                            <p className={`mb-4 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                                The <code>renderTooltip</code> prop allows you to customize the tooltip that appears
+                                when hovering over a task.
+                            </p>
+
+                            <CodeExample
+                                title="Custom Tooltip Rendering"
+                                description="Create a more detailed and informative tooltip."
+                                code={`<GanttChart
+  tasks={tasks}
+  renderTooltip={({ task, position, dragType, startDate, endDate }) => (
+    <div className="custom-tooltip p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800 border dark:border-gray-700">
+      <h3 className="text-lg font-bold dark:text-white">{task.name}</h3>
+
+      {dragType && (
+        <div className="my-2 p-1 bg-blue-100 dark:bg-blue-900 rounded text-sm text-blue-800 dark:text-blue-200">
+          {dragType === "move" ? "Moving task..." : "Resizing task..."}
+        </div>
+      )}
+
+      <div className="mt-2 text-sm dark:text-gray-300">
+        <span className="font-medium">Duration: </span>
+        {format(startDate, "MMM d, yyyy")} - {format(endDate, "MMM d, yyyy")}
+      </div>
+
+      <div className="mt-3">
+        <div className="flex justify-between mb-1">
+          <span className="text-sm font-medium dark:text-gray-300">Progress: {task.percent || 0}%</span>
+        </div>
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+          <div
+            className="bg-blue-600 h-2.5 rounded-full"
+            style={{ width: \`\${task.percent || 0}%\` }}
+          />
+        </div>
+      </div>
+
+      {task.assignee && (
+        <div className="mt-2 text-sm dark:text-gray-300">
+          <span className="font-medium">Assigned to: </span>
+          {task.assignee}
+        </div>
+      )}
+    </div>
+  )}
+/>`}
+                                language="jsx"
+                                defaultTab="code"
+                            />
+                        </div>
+
+                        <div className="mb-8">
+                            <h3 className={`text-xl font-semibold mb-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
+                                Custom Task List Rendering
+                            </h3>
+                            <p className={`mb-4 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                                The <code>renderTaskList</code> prop allows you to customize the left sidebar that
+                                contains the task groups and descriptions.
+                            </p>
+
+                            <CodeExample
+                                title="Custom Task List Rendering"
+                                description="Customize the left sidebar with additional information or controls."
+                                code={`<GanttChart
+  tasks={tasks}
+  renderTaskList={({ groups }) => (
+    <div className="custom-task-list">
+      {groups.map(group => (
+        <div key={group.id} className="group-item p-3 border-b dark:border-gray-700">
+          <div className="flex items-center">
+            <div className="w-2 h-2 rounded-full bg-indigo-500 mr-2"></div>
+            <h3 className="font-bold text-gray-900 dark:text-white">{group.name}</h3>
+          </div>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{group.description}</p>
+
+          <div className="mt-2">
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              {group.tasks.length} tasks ({group.tasks.filter(t => t.percent === 100).length} completed)
+            </div>
+
+            <div className="mt-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+              <div
+                className="bg-indigo-500 h-1.5 rounded-full"
+                style={{
+                  width: \`\${
+                    group.tasks.length
+                      ? (group.tasks.filter(t => t.percent === 100).length / group.tasks.length) * 100
+                      : 0
+                  }%\`
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+/>`}
+                                language="jsx"
+                                defaultTab="code"
+                            />
+                        </div>
+
+                        <div className="mb-8">
+                            <h3 className={`text-xl font-semibold mb-3 ${darkMode ? "text-white" : "text-gray-900"}`}>
+                                Dynamic Task Styling with getTaskColor
+                            </h3>
+                            <p className={`mb-4 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                                The <code>getTaskColor</code> prop provides a way to dynamically determine a task's
+                                colors based on its properties.
+                            </p>
+
+                            <CodeExample
+                                title="Dynamic Task Styling"
+                                description="Change task colors based on their status, priority, or other properties."
+                                code={`<GanttChart
+  tasks={tasks}
+  getTaskColor={({ task }) => {
+    // Task is complete
+    if (task.percent === 100) {
+      return {
+        backgroundColor: "#22c55e", // Green
+        borderColor: "#166534",
+        textColor: "#ffffff",
+      };
+    }
+
+    // Task has dependencies
+    if (task.dependencies?.length > 0) {
+      return {
+        backgroundColor: "#f59e0b", // Orange
+        textColor: "#ffffff",
+      };
+    }
+
+    // High priority task
+    if (task.priority === "high") {
+      return {
+        backgroundColor: "#ef4444", // Red
+        textColor: "#ffffff",
+      };
+    }
+
+    // Default color
+    return {
+      backgroundColor: "#3b82f6", // Blue
+      textColor: "#ffffff",
+    };
+  }}
+/>`}
+                                language="jsx"
+                                defaultTab="code"
+                            />
+                        </div>
+
+                        <div
+                            className={`p-4 rounded-lg ${
+                                darkMode ? "bg-blue-900/20 border border-blue-800" : "bg-blue-50 border border-blue-200"
+                            }`}>
+                            <h4 className={`font-medium mb-2 ${darkMode ? "text-blue-300" : "text-blue-800"}`}>
+                                Pro Tip: Combining Custom Renderers
+                            </h4>
+                            <p className={`text-sm ${darkMode ? "text-blue-200" : "text-blue-700"}`}>
+                                For maximum customization, you can combine multiple rendering props to create a
+                                completely custom Gantt chart experience. This is particularly useful for enterprise
+                                applications or when you need to integrate the Gantt chart with your product's design
+                                system.
+                            </p>
+                        </div>
                     </motion.section>
 
                     {/* Examples Section */}
