@@ -135,8 +135,6 @@ const GanttDemo: React.FC = () => {
     return (
         <div className="mb-8">
             <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
-                <h2 className={`text-xl font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>Interactive Demo</h2>
-
                 <div className="flex flex-wrap items-center gap-4">
                     <div className="flex items-center">
                         <label className="flex items-center cursor-pointer">

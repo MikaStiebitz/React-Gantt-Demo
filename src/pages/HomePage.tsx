@@ -152,6 +152,14 @@ import 'react-modern-gantt/dist/index.css';
                 </div>
             </div>
 
+            {/* Demo Section */}
+            <div className="mb-16">
+                <h2 className={`text-3xl font-bold mb-8 ${darkMode ? "text-white" : "text-gray-900"}`}>
+                    Interactive Demo
+                </h2>
+                {createElement(GanttDemo)}
+            </div>
+
             {/* Installation Section */}
             <div className="mb-16" id="installation">
                 <h2 className={`text-3xl font-bold mb-8 ${darkMode ? "text-white" : "text-gray-900"}`}>Installation</h2>
@@ -208,14 +216,6 @@ import 'react-modern-gantt/dist/index.css';
                     code: basicUsageCode,
                     language: "jsx",
                 })}
-            </div>
-
-            {/* Demo Section */}
-            <div className="mb-16">
-                <h2 className={`text-3xl font-bold mb-8 ${darkMode ? "text-white" : "text-gray-900"}`}>
-                    Interactive Demo
-                </h2>
-                {createElement(GanttDemo)}
             </div>
 
             {/* Troubleshooting Section - New */}
